@@ -1,0 +1,19 @@
+{
+  "name": "MVC",
+  "version": "1.0.0",
+  "description": "Loftschool homework",
+  "main": "n/a",
+  "build": "",
+  "scripts": {
+    "js": "browserify app/js/main.js > app/js/bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-rename": "^1.2.2",
+    "handlebars": "^4.0.5"
+  }
+}
