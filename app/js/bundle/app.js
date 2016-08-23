@@ -26,9 +26,22 @@ module.exports = {
         });
     },
     photosRoute: function() {
-        return Model.getPhotos().then(function(photos) {
-            console.log(photos);
-            photos = photos.slice(1);
+        return Model.getPhotos().then(function(photoData) {
+            let photos = photoData[0].items,
+                comments = photoData[1].items;
+            photos.forEach(function(photo){
+                comments.forEach(function(comment){
+                    if (photo.id === comment.pid) {
+                        if (photo.commentsCounter) {
+                            ++photo.commentsCounter;
+                        } else {
+                            photo.commentsCounter = 1;
+                        }
+                    } else {
+                        photo.commentsCounter = 0;
+                    }
+                });
+            });
             results.innerHTML = View.render('photos', {list: photos});
         });
     }
@@ -104,7 +117,7 @@ module.exports = {
         return this.callApi('groups.get', {extended: 1});
     },
     getPhotos: function() {
-        return this.callApi('photos.getAll', {extended: 1});
+        return this.callApi('execute', {code: 'return [API.photos.getAll({"v": "5.53", "extended": 1}), API.photos.getAllComments({"v": "5.53", "extended": 1})];' });
     }
 };
 

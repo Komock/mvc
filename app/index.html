@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
- -->    <script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
 
     <style>
         .item {
@@ -101,9 +100,9 @@
     <div class="photos grid">
         {{#each list}}
         <div class="photo item text-center">
-            <img src="{{src_big}}">
+            <img src="{{photo_604}}">
             <div>Лайков: {{likes.count}}</div>
-            <div>Комментариев: {{comments.count}}</div>
+            <div>Комментариев: {{commentsCounter}}</div>
             <div>Репостов: {{reposts.count}}</div>
         </div>
         {{/each}}

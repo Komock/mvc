@@ -42,6 +42,6 @@ module.exports = {
         return this.callApi('groups.get', {extended: 1});
     },
     getPhotos: function() {
-        return this.callApi('photos.getAll', {extended: 1});
+        return this.callApi('execute', {code: 'return [API.photos.getAll({"v": "5.53", "extended": 1}), API.photos.getAllComments({"v": "5.53", "extended": 1})];' });
     }
 };
