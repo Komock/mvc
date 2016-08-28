@@ -27,7 +27,7 @@ module.exports = {
     },
     photosRoute: function() {
         return Model.getPhotos().then(function(photoData) {
-            let photos = photoData[0].items,
+            let photos = photoData[0],
                 comments = photoData[1].items;
             photos.forEach(function(photo){
                 comments.forEach(function(comment){
@@ -117,7 +117,17 @@ module.exports = {
         return this.callApi('groups.get', {extended: 1});
     },
     getPhotos: function() {
-        return this.callApi('execute', {code: 'return [API.photos.getAll({"v": "5.53", "extended": 1}), API.photos.getAllComments({"v": "5.53", "extended": 1})];' });
+        let code = 'var offset = 200,' + 
+                    'photos = API.photos.getAll({"v": "5.53", "extended": 1}).items,' +
+                    'photosQty = photos.count;' +
+                    'while(offset < photosQty){' +
+                    'photos = photos + "," + API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset }).items;' +
+                    'offset = offset + offset;' +
+                    '}' +
+                    'return [ photos, API.photos.getAllComments({"v": "5.53", "extended": 1}) ];';
+
+        // return this.callApi('execute', {code: 'return [API.photos.getAll({"v": "5.53", "extended": 1, "count": 10})];' });
+        return this.callApi('execute', {code: code });
     }
 };
 

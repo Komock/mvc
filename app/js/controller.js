@@ -26,7 +26,7 @@ module.exports = {
     },
     photosRoute: function() {
         return Model.getPhotos().then(function(photoData) {
-            let photos = photoData[0].items,
+            let photos = photoData[0],
                 comments = photoData[1].items;
             photos.forEach(function(photo){
                 comments.forEach(function(comment){
