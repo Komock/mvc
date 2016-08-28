@@ -125,8 +125,6 @@ module.exports = {
                     'offset = offset + offset;' +
                     '}' +
                     'return [ photos, API.photos.getAllComments({"v": "5.53", "extended": 1}) ];';
-
-        // return this.callApi('execute', {code: 'return [API.photos.getAll({"v": "5.53", "extended": 1, "count": 10})];' });
         return this.callApi('execute', {code: code });
     }
 };
