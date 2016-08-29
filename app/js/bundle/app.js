@@ -28,7 +28,7 @@ module.exports = {
     photosRoute: function() {
         return Model.getPhotos().then(function(photoData) {
             let photos = photoData[0],
-                comments = photoData[1].items;
+                comments = photoData[1];
             photos.forEach(function(photo){
                 comments.forEach(function(comment){
                     if (photo.id === comment.pid) {
@@ -118,13 +118,21 @@ module.exports = {
     },
     getPhotos: function() {
         let code = 'var offset = 200,' + 
-                    'photos = API.photos.getAll({"v": "5.53", "extended": 1}).items,' +
-                    'photosQty = photos.count;' +
+                        'photosData = API.photos.getAll({"v": "5.53", "extended": 1, "count": offset}),' +
+                        'photos = photosData.items,' +
+                        'photosQty = photosData.count;' +
                     'while(offset < photosQty){' +
-                    'photos = photos + "," + API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset }).items;' +
+                    'photos = photos + "," + API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items;' +
                     'offset = offset + offset;' +
                     '}' +
-                    'return [ photos, API.photos.getAllComments({"v": "5.53", "extended": 1}) ];';
+                    'var offsetComments = 200,' + 
+                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}).items,' +
+                        'comments = commentsData,' +
+                        'commentsQty = commentsData.length;' +
+                    'while(offset < commentsQty){' +
+                    'comments = comments + "," + API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items;' +
+                    '}' +
+                    'return [photos, comments];';
         return this.callApi('execute', {code: code });
     }
 };

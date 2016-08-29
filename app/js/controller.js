@@ -27,7 +27,7 @@ module.exports = {
     photosRoute: function() {
         return Model.getPhotos().then(function(photoData) {
             let photos = photoData[0],
-                comments = photoData[1].items;
+                comments = photoData[1];
             photos.forEach(function(photo){
                 comments.forEach(function(comment){
                     if (photo.id === comment.pid) {
