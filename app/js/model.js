@@ -44,18 +44,19 @@ module.exports = {
     getPhotos: function() {
         let code = 'var offset = 200,' + 
                         'photosData = API.photos.getAll({"v": "5.53", "extended": 1, "count": offset}),' +
-                        'photos = photosData.items,' +
+                        'photos = [photosData.items],' +
                         'photosQty = photosData.count;' +
                     'while(offset < photosQty){' +
-                    'photos = photos + "," + API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items;' +
+                    'photos.push( API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items );' +
                     'offset = offset + offset;' +
                     '}' +
                     'var offsetComments = 200,' + 
-                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}).items,' +
-                        'comments = commentsData,' +
-                        'commentsQty = commentsData.length;' +
-                    'while(offset < commentsQty){' +
-                    'comments = comments + "," + API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items;' +
+                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}),' +
+                        'comments = [commentsData.items],' +
+                        'commentsQty = commentsData.count;' +
+                    'while(offsetComments < commentsQty){' +
+                    'comments.push( API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items );' +
+                    'offsetComments = offsetComments + offsetComments;' +
                     '}' +
                     'return [photos, comments];';
         return this.callApi('execute', {code: code });

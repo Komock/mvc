@@ -6,6 +6,7 @@ let Model = require('./model'),
 let btnGroup = document.querySelector('.btn-group');
 btnGroup.addEventListener('click', function(e) {
     e.preventDefault();
+    results.innerHTML = '<div class="spinner"></div>';
     let route = e.target.dataset.route;
     Router.handle(route);
 });

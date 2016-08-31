@@ -27,8 +27,17 @@ module.exports = {
     },
     photosRoute: function() {
         return Model.getPhotos().then(function(photoData) {
-            let photos = photoData[0],
-                comments = photoData[1];
+            function filterData(data) {
+                if (data.length > 1) {
+                    return data.reduce(function(arr, cur) {
+                        return arr.concat(cur);
+                    });
+                } else {
+                    return data[0];
+                }
+            };
+            let photos = filterData(photoData[0]);
+            let comments = filterData(photoData[1]);
             photos.forEach(function(photo){
                 comments.forEach(function(comment){
                     if (photo.id === comment.pid) {
@@ -56,6 +65,7 @@ let Model = require('./model'),
 let btnGroup = document.querySelector('.btn-group');
 btnGroup.addEventListener('click', function(e) {
     e.preventDefault();
+    results.innerHTML = '<div class="spinner"></div>';
     let route = e.target.dataset.route;
     Router.handle(route);
 });
@@ -119,18 +129,19 @@ module.exports = {
     getPhotos: function() {
         let code = 'var offset = 200,' + 
                         'photosData = API.photos.getAll({"v": "5.53", "extended": 1, "count": offset}),' +
-                        'photos = photosData.items,' +
+                        'photos = [photosData.items],' +
                         'photosQty = photosData.count;' +
                     'while(offset < photosQty){' +
-                    'photos = photos + "," + API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items;' +
+                    'photos.push( API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items );' +
                     'offset = offset + offset;' +
                     '}' +
                     'var offsetComments = 200,' + 
-                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}).items,' +
-                        'comments = commentsData,' +
-                        'commentsQty = commentsData.length;' +
-                    'while(offset < commentsQty){' +
-                    'comments = comments + "," + API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items;' +
+                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}),' +
+                        'comments = [commentsData.items],' +
+                        'commentsQty = commentsData.count;' +
+                    'while(offsetComments < commentsQty){' +
+                    'comments.push( API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items );' +
+                    'offsetComments = offsetComments + offsetComments;' +
                     '}' +
                     'return [photos, comments];';
         return this.callApi('execute', {code: code });
