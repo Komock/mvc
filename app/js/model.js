@@ -41,24 +41,14 @@ module.exports = {
     getGroups: function() {
         return this.callApi('groups.get', {extended: 1});
     },
-    getPhotos: function() {
-        let code = 'var offset = 200,' + 
-                        'photosData = API.photos.getAll({"v": "5.53", "extended": 1, "count": offset}),' +
-                        'photos = [photosData.items],' +
-                        'photosQty = photosData.count;' +
-                    'while(offset < photosQty){' +
-                    'photos.push( API.photos.getAll({"v": "5.53", "extended": 1, "offset": offset, "count": offset }).items );' +
-                    'offset = offset + offset;' +
-                    '}' +
-                    'var offsetComments = 200,' + 
-                        'commentsData = API.photos.getAllComments({"v": "5.53", "extended": 1, "count": offsetComments}),' +
-                        'comments = [commentsData.items],' +
-                        'commentsQty = commentsData.count;' +
-                    'while(offsetComments < commentsQty){' +
-                    'comments.push( API.photos.getAllComments({"v": "5.53", "extended": 1, "offset": offsetComments, "count": offsetComments}).items );' +
-                    'offsetComments = offsetComments + offsetComments;' +
-                    '}' +
-                    'return [photos, comments];';
-        return this.callApi('execute', {code: code });
+    getAlbums: function(){
+        return this.callApi('photos.getAlbums', {v: 5.53, need_system: 1});
+    },
+    getPhotosOfAlbum: function(id){
+        return this.callApi('photos.get', {extended: 1, album_id: id});
+    },
+    getPhotoComments: function(id){
+        console.log(id);
+        return this.callApi('photos.getComments', {extended: 1, photo_id: id, count: 100});
     }
 };

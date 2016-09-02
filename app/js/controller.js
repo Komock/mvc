@@ -25,32 +25,39 @@ module.exports = {
         });
     },
     photosRoute: function() {
-        return Model.getPhotos().then(function(photoData) {
-            function filterData(data) {
-                if (data.length > 1) {
-                    return data.reduce(function(arr, cur) {
-                        return arr.concat(cur);
-                    });
-                } else {
-                    return data[0];
+
+        return Model.getAlbums().then(function(albums) {
+            let count = albums.count,
+                i = 0,
+                ids = [];
+
+            for(let album of albums.items){
+                let id = album.id;
+                switch (id){
+                    case -7:
+                        id = 'wall';
+                        break;
+                    case -6:
+                        id = 'profile';
+                        break;
+                    case -15:
+                        id = 'saved';
+                        break;
                 }
-            };
-            let photos = filterData(photoData[0]);
-            let comments = filterData(photoData[1]);
-            photos.forEach(function(photo){
-                comments.forEach(function(comment){
-                    if (photo.id === comment.pid) {
-                        if (photo.commentsCounter) {
-                            ++photo.commentsCounter;
-                        } else {
-                            photo.commentsCounter = 1;
-                        }
-                    } else {
-                        photo.commentsCounter = 0;
+                ids.push(id);
+            }
+
+            function getPhotosForEachAlbum(){
+                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {
+                    if (i === 0) results.innerHTML = ''; // remove preloader in first time
+                    results.innerHTML = results.innerHTML + View.render('photos', {list: photosOfAlbum});
+                    i++;
+                    if (i < count) {
+                        getPhotosForEachAlbum(); // recursion
                     }
                 });
-            });
-            results.innerHTML = View.render('photos', {list: photos});
+            }
+            getPhotosForEachAlbum();
         });
     }
 };

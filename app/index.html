@@ -125,16 +125,14 @@
 </script>
 
 <script type="text/x-handlebars-template" id="photosTemplate">
-    <div class="photos grid">
-        {{#each list}}
-        <div class="photo item text-center">
-            <img src="{{photo_604}}">
-            <div>Лайков: {{likes.count}}</div>
-            <div>Комментариев: {{commentsCounter}}</div>
-            <div>Репостов: {{reposts.count}}</div>
-        </div>
-        {{/each}}
+    {{#each list}}
+    <div class="photo item text-center">
+        <img src="{{src_big}}">
+        <div>Лайков: {{likes.count}}</div>
+        <div>Комментариев: {{comments.count}}</div>
+        <div>Репостов: {{reposts.count}}</div>
     </div>
+    {{/each}}
 </script>
 </body>
 </html>
