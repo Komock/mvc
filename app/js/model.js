@@ -49,6 +49,6 @@ module.exports = {
     },
     getPhotoComments: function(id){
         console.log(id);
-        return this.callApi('photos.getComments', {extended: 1, photo_id: id, count: 100});
+        return this.callApi('photos.getComments', {v: 5.53, photo_id: id, count: 100});
     }
 };

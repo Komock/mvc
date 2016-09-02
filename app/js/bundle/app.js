@@ -49,13 +49,27 @@ module.exports = {
             }
 
             function getPhotosForEachAlbum(){
-                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {
+                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {                    
+                    // Get comments
+                    function getComments(){
+                        photosOfAlbum.forEach(function(photo, index){
+                            if(photo.comments.count > 0) {
+                                Model.getPhotoComments(photo.pid).then(function(comments) {
+                                    let photoEl = document.querySelector('[data-id="' + photo.pid + '"]');
+                                    photoEl.innerHTML = photoEl.innerHTML + View.render('comments', {list: comments.items});
+                                });
+                            }
+                        });
+                    };
+
                     if (i === 0) results.innerHTML = ''; // remove preloader in first time
                     results.innerHTML = results.innerHTML + View.render('photos', {list: photosOfAlbum});
+                    getComments();
                     i++;
                     if (i < count) {
                         getPhotosForEachAlbum(); // recursion
                     }
+                    
                 });
             }
             getPhotosForEachAlbum();
@@ -141,7 +155,7 @@ module.exports = {
     },
     getPhotoComments: function(id){
         console.log(id);
-        return this.callApi('photos.getComments', {extended: 1, photo_id: id, count: 100});
+        return this.callApi('photos.getComments', {v: 5.53, photo_id: id, count: 100});
     }
 };
 
