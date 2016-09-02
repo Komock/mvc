@@ -34,6 +34,7 @@ module.exports = {
 
             for(let album of albums.items){
                 let id = album.id;
+                console.log(id);
                 switch (id){
                     case -7:
                         id = 'wall';
@@ -54,10 +55,12 @@ module.exports = {
                     function getComments(){
                         photosOfAlbum.forEach(function(photo, index){
                             if(photo.comments.count > 0) {
-                                Model.getPhotoComments(photo.pid).then(function(comments) {
-                                    let photoEl = document.querySelector('[data-id="' + photo.pid + '"]');
-                                    photoEl.innerHTML = photoEl.innerHTML + View.render('comments', {list: comments.items});
-                                });
+                                setTimeout(function(){
+                                    Model.getPhotoComments(photo.pid).then(function(comments) {
+                                        let photoEl = document.querySelector( '[data-id="' + photo.pid + '"]' );
+                                        photoEl.innerHTML = photoEl.innerHTML + View.render('comments', {list: comments.items});
+                                    });
+                                }, 600);
                             }
                         });
                     };
@@ -67,7 +70,9 @@ module.exports = {
                     getComments();
                     i++;
                     if (i < count) {
-                        getPhotosForEachAlbum(); // recursion
+                        setTimeout(function(){
+                            getPhotosForEachAlbum(); // recursion
+                        }, 400);
                     }
                     
                 });
@@ -76,7 +81,6 @@ module.exports = {
         });
     }
 };
-
 },{"./model":3,"./view":5}],2:[function(require,module,exports){
 'use strict';
 let Model = require('./model'),
@@ -154,11 +158,9 @@ module.exports = {
         return this.callApi('photos.get', {extended: 1, album_id: id});
     },
     getPhotoComments: function(id){
-        console.log(id);
         return this.callApi('photos.getComments', {v: 5.53, photo_id: id, count: 100});
     }
 };
-
 },{}],4:[function(require,module,exports){
 let Controller = require('./controller');
 
