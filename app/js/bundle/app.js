@@ -60,7 +60,6 @@ module.exports = {
                         photosOfAlbum.forEach(function(photo, index){
                             if(photo.comments.count > 0) {
                                 let displace = 200 * j;
-                                console.log(displace);
                                 setTimeout(function(){
                                     Model.getPhotoComments(photo.pid).then(function(comments) {
                                         let photoEl = document.querySelector( '[data-id="' + photo.pid + '"]' );
