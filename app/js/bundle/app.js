@@ -49,18 +49,25 @@ module.exports = {
                 ids.push(id);
             }
 
+            console.log(ids);
+
             function getPhotosForEachAlbum(){
-                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {                    
+                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {     
+                    console.log(photosOfAlbum);               
                     // Get comments
                     function getComments(){
+                        let j = 1;
                         photosOfAlbum.forEach(function(photo, index){
                             if(photo.comments.count > 0) {
+                                let displace = 200 * j;
+                                console.log(displace);
                                 setTimeout(function(){
                                     Model.getPhotoComments(photo.pid).then(function(comments) {
                                         let photoEl = document.querySelector( '[data-id="' + photo.pid + '"]' );
                                         photoEl.innerHTML = photoEl.innerHTML + View.render('comments', {list: comments.items});
                                     });
-                                }, 600);
+                                }, displace);
+                                j++;
                             }
                         });
                     };
@@ -70,9 +77,11 @@ module.exports = {
                     getComments();
                     i++;
                     if (i < count) {
+                        let displace = 200 * i;
+                        console.log(displace);
                         setTimeout(function(){
                             getPhotosForEachAlbum(); // recursion
-                        }, 400);
+                        }, displace);
                     }
                     
                 });
