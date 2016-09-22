@@ -51,8 +51,7 @@ module.exports = {
             console.log(ids);
 
             function getPhotosForEachAlbum(){
-                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {     
-                    console.log(photosOfAlbum);               
+                Model.getPhotosOfAlbum(ids[i]).then(function(photosOfAlbum) {                   
                     // Get comments
                     function getComments(){
                         let j = 1;
